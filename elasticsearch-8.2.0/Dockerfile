@@ -22,6 +22,7 @@ FROM docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
 WORKDIR /usr/share/tokenizer/dicts
 COPY --from=builder /coccoc-tokenizer-master/dicts/tokenizer .
 COPY --from=builder /coccoc-tokenizer-master/dicts/vn_lang_tool .
+RUN LS
 COPY --from=builder /coccoc-tokenizer-master/build/libcoccoc_tokenizer_jni.so /usr/lib
 COPY --from=builder /coccoc-tokenizer-master/build/multiterm_trie.dump /usr/share/tokenizer/dicts
 COPY --from=builder /coccoc-tokenizer-master/build/nontone_pair_freq_map.dump /usr/share/tokenizer/dicts
@@ -33,7 +34,7 @@ COPY --from=builder /coccoc-tokenizer-master/build/numeric /usr/share/tokenizer/
 # COPY --from=builder /usr/lib/ /usr/lib/
 
 COPY ./elasticsearch-analysis-vietnamese-8.2.0.zip /usr/share/elasticsearch/plugin/elasticsearch-analysis-vietnamese-8.2.0.zip
-RUN LS
+
 
 RUN whoami
 USER root
