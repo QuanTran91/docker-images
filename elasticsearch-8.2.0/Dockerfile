@@ -38,7 +38,7 @@ COPY ./elasticsearch-analysis-vietnamese-8.2.0.zip /usr/share/elasticsearch/plug
 RUN whoami
 USER root
 RUN whoami
-RUN elasticsearch-plugin install --batch file:./plugin/elasticsearch-analysis-vietnamese-8.2.0.zip
+RUN echo "Y" | elasticsearch-plugin install --batch file:./plugin/elasticsearch-analysis-vietnamese-8.2.0.zip
 RUN elasticsearch-plugin install --batch analysis-icu
 
 USER elasticsearch
