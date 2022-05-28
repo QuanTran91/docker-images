@@ -2,9 +2,8 @@ ARG ELASTIC_VERSION
 ARG DEBIAN_FRONTEND=noninteractive
 # FROM ubuntu as builder
 FROM docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION} as builder
-
-ADD https://github.com/miczone/coccoc-tokenizer/archive/refs/heads/master.zip /
 USER root
+ADD https://github.com/miczone/coccoc-tokenizer/archive/refs/heads/master.zip /
 RUN apt-get update -y && apt-get install -y unzip cmake g++ default-jdk
 # RUN apt-get update -y && \
 #     apt-get install -y make cmake unzip pkg-config g++ wget default-jdk
