@@ -22,7 +22,7 @@ FROM docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
 WORKDIR /usr/share/tokenizer/dicts
 COPY --from=builder /coccoc-tokenizer-master/dicts/tokenizer .
 COPY --from=builder /coccoc-tokenizer-master/dicts/vn_lang_tool .
-RUN LS
+RUN ls
 COPY --from=builder /coccoc-tokenizer-master/build/libcoccoc_tokenizer_jni.so /usr/lib
 COPY --from=builder /coccoc-tokenizer-master/build/multiterm_trie.dump /usr/share/tokenizer/dicts
 COPY --from=builder /coccoc-tokenizer-master/build/nontone_pair_freq_map.dump /usr/share/tokenizer/dicts
