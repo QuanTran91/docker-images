@@ -22,17 +22,16 @@ FROM docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
 WORKDIR /usr/share/tokenizer/dicts
 COPY --from=builder /coccoc-tokenizer-master/dicts/tokenizer .
 COPY --from=builder /coccoc-tokenizer-master/dicts/vn_lang_tool .
-RUN ls
 COPY --from=builder /coccoc-tokenizer-master/build/libcoccoc_tokenizer_jni.so /usr/lib
 COPY --from=builder /coccoc-tokenizer-master/build/multiterm_trie.dump /usr/share/tokenizer/dicts
 COPY --from=builder /coccoc-tokenizer-master/build/nontone_pair_freq_map.dump /usr/share/tokenizer/dicts
 COPY --from=builder /coccoc-tokenizer-master/build/syllable_trie.dump /usr/share/tokenizer/dicts
-COPY --from=builder /coccoc-tokenizer-master/build/alphabetic /usr/share/tokenizer/dicts
-COPY --from=builder /coccoc-tokenizer-master/build/d_and_gi.txt /usr/share/tokenizer/dicts
-COPY --from=builder /coccoc-tokenizer-master/build/i_and_y.txt /usr/share/tokenizer/dicts
-COPY --from=builder /coccoc-tokenizer-master/build/numeric /usr/share/tokenizer/dicts
+# COPY --from=builder /coccoc-tokenizer-master/build/alphabetic /usr/share/tokenizer/dicts
+# COPY --from=builder /coccoc-tokenizer-master/build/d_and_gi.txt /usr/share/tokenizer/dicts
+# COPY --from=builder /coccoc-tokenizer-master/build/i_and_y.txt /usr/share/tokenizer/dicts
+# COPY --from=builder /coccoc-tokenizer-master/build/numeric /usr/share/tokenizer/dicts
 # COPY --from=builder /usr/lib/ /usr/lib/
-
+RUN ls
 COPY ./elasticsearch-analysis-vietnamese-8.2.0.zip /usr/share/elasticsearch/plugin/elasticsearch-analysis-vietnamese-8.2.0.zip
 
 
