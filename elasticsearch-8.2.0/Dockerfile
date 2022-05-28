@@ -1,9 +1,16 @@
 ARG ELASTIC_VERSION
-
-FROM ubuntu as builder
+ARG DEBIAN_FRONTEND=noninteractive
+# FROM ubuntu as builder
+FROM docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION} as builder
 
 ADD https://github.com/miczone/coccoc-tokenizer/archive/refs/heads/master.zip /
+USER root
 RUN apt-get update -y && apt-get install -y unzip cmake g++ default-jdk
+# RUN apt-get update -y && \
+#     apt-get install -y make cmake unzip pkg-config g++ wget default-jdk
+
+# ENV JAVA_HOME /etc/alternatives/java_sdk_17
+
 
 RUN unzip master.zip && chmod 755 coccoc-tokenizer-master && \
     cd coccoc-tokenizer-master && mkdir build && cd build && \
