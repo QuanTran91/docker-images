@@ -1,53 +1,32 @@
 ARG ELASTIC_VERSION
-ARG DEBIAN_FRONTEND=noninteractive
-# FROM ubuntu as builder
+FROM ubuntu:20.04 as builder
 # https://github.com/elastic/dockerfiles/blob/v8.2.0/elasticsearch/Dockerfile
-FROM docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION} as builder
-# USER root
+
 ADD https://github.com/miczone/coccoc-tokenizer/archive/refs/heads/master.zip /
-RUN apt-get update -y && apt-get install -y unzip cmake g++
-# RUN apt-get update -y && \
-#     apt-get install -y make cmake unzip pkg-config g++ wget default-jdk
-
-# ENV JAVA_HOME /etc/alternatives/java_sdk_17
+RUN apt-get update -y && apt-get install -y unzip cmake g++ default-jdk
 
 
-RUN unzip master.zip && chmod 755 coccoc-tokenizer-master && \
-    cd coccoc-tokenizer-master && mkdir build && cd build && \
-    cmake -DBUILD_JAVA=1 -DCMAKE_INSTALL_PREFIX=/usr .. && \
+RUN unzip master.zip && chmod 755 coccoc-tokenizer-master 
+
+RUN cd coccoc-tokenizer-master && mkdir build && cd build && \
+    cmake -DBUILD_JAVA=1 -DCMAKE_INSTALL_PREFIX=/usr/ .. && \
     make install
-    #  && \
-    # cp libcoccoc_tokenizer_jni.so /usr/lib/ && \
-    # cd / && rm -f master.zip && \
-    # rm -rf coccoc-tokenizer-master
 
 # https://www.docker.elastic.co/
 FROM docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
 
 # Add your elasticsearch plugins setup here
 # Example: RUN elasticsearch-plugin install analysis-icu
-WORKDIR /usr/share/tokenizer/dicts
+WORKDIR /usr/local/share/tokenizer/dicts
 COPY --from=builder /coccoc-tokenizer-master/dicts/tokenizer .
 COPY --from=builder /coccoc-tokenizer-master/dicts/vn_lang_tool .
 COPY --from=builder /coccoc-tokenizer-master/build/libcoccoc_tokenizer_jni.so /usr/lib
-COPY --from=builder /coccoc-tokenizer-master/build/multiterm_trie.dump /usr/share/tokenizer/dicts
-COPY --from=builder /coccoc-tokenizer-master/build/nontone_pair_freq_map.dump /usr/share/tokenizer/dicts
-COPY --from=builder /coccoc-tokenizer-master/build/syllable_trie.dump /usr/share/tokenizer/dicts
-# COPY --from=builder /coccoc-tokenizer-master/build/alphabetic /usr/share/tokenizer/dicts
-# COPY --from=builder /coccoc-tokenizer-master/build/d_and_gi.txt /usr/share/tokenizer/dicts
-# COPY --from=builder /coccoc-tokenizer-master/build/i_and_y.txt /usr/share/tokenizer/dicts
-# COPY --from=builder /coccoc-tokenizer-master/build/numeric /usr/share/tokenizer/dicts
-# COPY --from=builder /usr/lib/ /usr/lib/
-RUN ls
+COPY --from=builder /coccoc-tokenizer-master/build/multiterm_trie.dump .
+COPY --from=builder /coccoc-tokenizer-master/build/nontone_pair_freq_map.dump .
+COPY --from=builder /coccoc-tokenizer-master/build/syllable_trie.dump .
+
 COPY ./elasticsearch-analysis-vietnamese-8.2.0.zip /usr/share/elasticsearch/plugin/elasticsearch-analysis-vietnamese-8.2.0.zip
 
-
-RUN whoami
-USER root
-RUN whoami
-RUN echo "Y" | elasticsearch-plugin install --batch file:./plugin/elasticsearch-analysis-vietnamese-8.2.0.zip
-RUN elasticsearch-plugin install --batch analysis-icu
-
-USER elasticsearch
-RUN whoami
+RUN echo "Y" | /usr/share/elasticsearch/bin/elasticsearch-plugin install --batch file:./plugin/elasticsearch-analysis-vietnamese-8.2.0.zip && \
+    /usr/share/elasticsearch/bin/elasticsearch-plugin install analysis-icu
 
