@@ -1,4 +1,4 @@
-FROM docker:20.10.12
+FROM docker:20.10.13
 
 ENV GLIBC_VER=2.34-r0
 
@@ -30,11 +30,11 @@ RUN apk --update-cache add \
         curl \
     && rm glibc-${GLIBC_VER}.apk \
     && rm glibc-bin-${GLIBC_VER}.apk \
-    && rm -rf /var/cache/apk/* 
-RUN apk add --update git 
-RUN apk add --update curl 
-RUN apk add --update jq 
-RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
+    && rm -rf /var/cache/apk/* \
+    && apk add --update git \
+    && apk add --update curl  \
+    && apk add --update jq \
+    && curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
     && chmod 700 get_helm.sh \
     && export VERIFY_CHECKSUM=false \
     && ./get_helm.sh 
