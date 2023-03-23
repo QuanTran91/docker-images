@@ -1,0 +1,3 @@
+docker build -t quantran/docker-dind-awscli:0.0.2 .
+
+docker push quantran/docker-dind-awscli:0.0.2
