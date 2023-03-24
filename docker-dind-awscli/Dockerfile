@@ -1,4 +1,4 @@
-FROM docker:20.10.13
+FROM docker:20.10.13-dind
 
 ENV GLIBC_VER=2.34-r0
 
