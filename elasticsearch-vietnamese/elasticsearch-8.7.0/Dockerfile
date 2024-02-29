@@ -3,8 +3,9 @@ FROM ubuntu:20.04 as builder
 # https://github.com/elastic/dockerfiles/blob/v8.7.0/elasticsearch/Dockerfile
 
 ADD https://github.com/wokaio/coccoc-tokenizer/archive/refs/tags/v1.0.2.zip /
-RUN apt-get update -y && apt-get install -y unzip cmake g++ default-jdk
-
+RUN apt-get update -y && apt-get install -y unzip cmake 
+RUN apt-get install -y g++
+RUN apt-get install -y default-jdk
 
 RUN unzip v1.0.2.zip && mv coccoc-tokenizer-1.0.2 coccoc-tokenizer && chmod 755 coccoc-tokenizer 
 
